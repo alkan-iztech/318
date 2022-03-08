@@ -11,6 +11,8 @@ scipy = "*"
 sklearn = "*"
 pandas = "*"
 flask-cors = "*"
+flask-sqlalchemy = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
