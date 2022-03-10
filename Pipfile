@@ -13,6 +13,7 @@ pandas = "*"
 flask-cors = "*"
 flask-sqlalchemy = "*"
 mysqlclient = "*"
+numpy = "*"
 
 [dev-packages]
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload CSV</title>
+</head>
+
+<body>
+  <p>Admin id: 68</p>
+  <form class="upload" action="/csv" method="POST" enctype="multipart/form-data">
+    <input type="file" name="uploadFile" id="uploadFile" accept=".csv" required>
+    <input type="text" name="app-title" placeholder="App Title" required>
+    <input type="number" name="user-id" placeholder="User Id" min="1" value="68" required>
+    <select name="delimiter" id="delimiter" required>
+      <option value="," selected>,</option>
+      <option value="|">|</option>
+      <option value="-">-</option>
+      <option value="_">_</option>
+    </select>
+    <br>
+    <input type="submit">
+    <input type="reset">
+  </form>
+
+  <script>
+    // const uploadForm = document.querySelector('.upload');
+    const uploadForm = null;
+
+    if (uploadForm) {
+      uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let file = e.target.uploadFile.files[0];
+
+        let formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const result = await fetch('/csv', {
+            method: 'POST',
+            body: formData
+          });
+          const json = await result.json();
+          console.log("Json:", json);
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

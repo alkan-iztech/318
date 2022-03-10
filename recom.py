@@ -4,26 +4,23 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 def process_csv(csv, seperator=','):
-    print('Loading data...')
+    print('Loading df...')
     df = pd.read_csv(csv, sep=seperator, on_bad_lines='skip')
-    df = df.head(20000)
-
     df = df.dropna(how='any')
-    df = df.drop_duplicates(subset='title', keep='first')
-    # df.head(5)
+    # df = df.drop_duplicates(subset='title', keep='first')
+    print('...loaded df.')
     return df
 
-def get_cos_sim(df):
-    combined = df[df.columns[2:-1]].apply(
+def get_combined(df):
+    combined = df[df.columns[1:-1]].apply(
         lambda x: ','.join(x.dropna().astype(str)),
         axis=1
     ).str.lower().replace({"[^A-Za-z0-9 ]+": ""}, regex=True)
     combined = combined.reset_index(drop=True)
     # combined.head()
+    return combined
 
-    #################################
-    #################################
-
+def get_cos_sim(df, combined):
     count = CountVectorizer(stop_words='english')
     count_matrix = count.fit_transform(combined)
 
@@ -41,14 +38,10 @@ def get_cos_sim(df):
     print('Loaded data.')
     return cos_sim
 
-def recommend(title, df, cos_sim):
-    indices = pd.Series(df.index, index = df['title'])
-    index = indices[title]
-    print(index)
-
-    sim_scores = list(enumerate(cos_sim[index]))
+def recommend(row, num_of_recs=5):
+    sim_scores = list(enumerate(row))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:10]
+    sim_scores = sim_scores[1:num_of_recs+1]
 
     indices = [i[0] for i in sim_scores]
     return indices
