@@ -103,7 +103,7 @@ def signup():
             data = User(username, email, password)
             db.session.add(data)
             db.session.commit()
-            return custom_message(data.id, 200)
+            return custom_message({'id': data.id}, 200)
         return custom_message({'validation': validation_result}, 404)
     except Exception as e:
         return custom_message({'message': e}, 404)
@@ -115,9 +115,9 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            return custom_message(user.id, 200)
+            return custom_message({'id': user.id}, 200)
         else:
-            return custom_message('Incorrect email or password', 404)
+            return custom_message({'msg': 'Incorrect email or password'}, 404)
 
     except Exception as e:
         return custom_message(e, 404)
