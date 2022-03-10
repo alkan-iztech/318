@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <p>Admin id: 68</p>
+  <p>Admin id: {{ admin_id }}</p>
   <form class="upload" action="/csv" method="POST" enctype="multipart/form-data">
     <input type="file" name="uploadFile" id="uploadFile" accept=".csv" required>
     <input type="text" name="app-title" placeholder="App Title" required>

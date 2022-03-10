@@ -129,7 +129,9 @@ def logout():
 @app.route('/csv', methods=['GET', 'POST'])
 def csv():
     if request.method == 'GET':
-        return render_template('upload_csv.html')
+        admin = User.query.filter(User.username == "ADMIN").first()
+        admin_id = admin.id if admin else "admin not found"
+        return render_template('upload_csv.html', admin_id=admin_id)
     else:
         create_directory_if_not_exists(apps_directory)
         print(request.form)
@@ -212,6 +214,14 @@ def clear():
     db.session.commit()
     shutil.rmtree(apps_directory)
     return custom_message({'msg': 'Cleared'}, 200)
+
+@app.route('/apps')
+def get_apps():
+    apps = App.query.all()
+    apps_map = {}
+    for cur_app in apps:
+        apps_map[cur_app.id] = cur_app.name
+    return custom_message(apps_map, 200)
 
 @app.route('/app/<int:id>')
 def get_app(id):
