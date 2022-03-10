@@ -13,8 +13,8 @@ app.config['SESSION_TYPE'] = "filesystem"
 app.debug = True
 Session(app)
 
-BOOK_RECOM_ENV = os.environ.get("THREE_ONE_EIGHT_ENV")
-if BOOK_RECOM_ENV == 'prod':
+GET_REC_ENV = os.environ.get("THREE_ONE_EIGHT_ENV")
+if GET_REC_ENV == 'prod':
     app.debug = False
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("JAWSDB_URL")
 else:
