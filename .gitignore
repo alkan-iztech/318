@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 .env
 .flaskenv
+apps
 test*.csv
 *.pyc
 *.pyo
