@@ -139,6 +139,10 @@ def csv():
         app_title = request.form['app-title']
         delimiter = request.form['delimiter']
         user_id = request.form['user-id']
+        excluded_columns = None
+        if 'excluded-columns' in request.form:
+            excluded_columns = request.form['excluded-columns']
+        print('excluded_columns:', excluded_columns)
         file_df = process_csv(file, delimiter)
         print(file_df.tail())
         print('###')
@@ -151,7 +155,7 @@ def csv():
         new_app_path = os.path.join(apps_directory, f'app_{new_app.id}')
         create_directory_if_not_exists(new_app_path)
 
-        combined = get_combined(file_df)
+        combined = get_combined(file_df, excluded_columns)
         first = AppItem(combined[0], new_app.id)
         db.session.add(first)
         db.session.flush()
@@ -227,7 +231,7 @@ def get_apps():
         # apps_map[cur_app.id] = cur_app.name
     return custom_message(apps_map, 200)
 
-@app.route('/app/<int:id>')
+@app.route('/apps/<int:id>')
 def get_app(id):
     the_app = App.query.filter(App.id == id).first()
     if the_app:
@@ -235,7 +239,7 @@ def get_app(id):
     else:
         return custom_message({'msg': f'App with {id} is not found.'}, 404)
 
-@app.route('/app/<int:id>/update', methods=['POST'])
+@app.route('/apps/<int:id>/update', methods=['POST'])
 def update_app(id):
     new_name = request.form['name']
     the_app = App.query.filter(App.id == id).first()
@@ -246,7 +250,7 @@ def update_app(id):
     else:
         return custom_message({'msg': f'App with {id} is not found.'}, 404)
 
-@app.route('/app/<int:id>/delete', methods=['POST'])
+@app.route('/apps/<int:id>/delete', methods=['POST'])
 def delete_app(id):
     the_app = App.query.filter(App.id == id).first()
     if not the_app:

@@ -11,12 +11,17 @@ def process_csv(csv, seperator=','):
     print('...loaded df.')
     return df
 
-def get_combined(df):
+def get_combined(df, excluded_columns=None):
+    if excluded_columns != None:
+        excld_arr = excluded_columns.split(',')
+        df = df.loc[:, ~df.columns.isin(excld_arr)]
+        print('after excluded columns:', excld_arr)
     combined = df[df.columns[1:-1]].apply(
-        lambda x: ','.join(x.dropna().astype(str)),
+        lambda x: ', '.join(x.dropna().astype(str)),
         axis=1
-    ).str.lower().replace({"[^A-Za-z0-9 ]+": ""}, regex=True)
+    ).str.lower().replace({"[^A-Za-z0-9 ,]+": ""}, regex=True)
     combined = combined.reset_index(drop=True)
+    print('combined:', combined[:5])
     # combined.head()
     return combined
 
