@@ -220,7 +220,11 @@ def get_apps():
     apps = App.query.all()
     apps_map = {}
     for cur_app in apps:
-        apps_map[cur_app.id] = cur_app.name
+        res = {}
+        res['user_id'] = cur_app.user_id
+        res['name'] = cur_app.name
+        apps_map[cur_app.id] = res
+        # apps_map[cur_app.id] = cur_app.name
     return custom_message(apps_map, 200)
 
 @app.route('/app/<int:id>')
